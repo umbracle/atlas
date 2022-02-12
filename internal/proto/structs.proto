@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "/internal/proto";
+
+message Input {
+    string datadir = 1;
+}
+
+message NodeSpec {
+    map<string,string> env = 1;
+    repeated string args = 2;
+    Image image = 3;
+
+    message Image {
+        string image = 1;
+        string ref = 2;
+    }
+}
+
+message Node {
+    string id = 1;
+    NodeSpec spec = 2;
+}
