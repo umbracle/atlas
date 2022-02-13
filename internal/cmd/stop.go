@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/mitchellh/cli"
+	"github.com/umbracle/atlas/internal/proto"
+	"github.com/umbracle/atlas/internal/runtime"
 	"github.com/umbracle/atlas/internal/state"
 )
 
@@ -35,11 +37,29 @@ func (c *StopCommand) Run(args []string) int {
 		panic(err)
 	}
 
+	d, err := runtime.NewDocker()
+	if err != nil {
+		panic(err)
+	}
+
 	nodes, err := state.ListNodes()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(nodes)
+	// find the node
+	var node *proto.Node
+	for _, nodeTarget := range nodes {
+		if nodeTarget.Id == arg {
+			node = nodeTarget
+		}
+	}
+	if node == nil {
+		c.UI.Error("node not found")
+		return 1
+	}
+
+	fmt.Println(node)
+	d.Stop(node.Handle)
 
 	return 0
 }

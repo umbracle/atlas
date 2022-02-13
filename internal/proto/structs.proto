@@ -4,22 +4,65 @@ package proto;
 
 option go_package = "/internal/proto";
 
+service AtlasService {
+    rpc Deploy(DeployRequest) returns (DeployResponse);
+    rpc ListNodes(ListNodesRequest) returns (ListNodesResponse);
+}
+
+// ---- grpc messages ----
+
+message DeployRequest {
+    string plugin = 1;
+    string chain = 2;
+    string config = 3;
+}
+
+message DeployResponse {
+    Node node = 1;
+}
+
+message ListNodesRequest {
+}
+
+message ListNodesResponse { 
+    repeated Node nodes = 1;
+}   
+
+// ---- objects ----
+
 message Input {
     string datadir = 1;
 }
 
+// NodeSpec is the running specification of the node
 message NodeSpec {
     map<string,string> env = 1;
     repeated string args = 2;
     Image image = 3;
+    Volume volume = 4;
 
     message Image {
         string image = 1;
         string ref = 2;
     }
+
+    message Volume {
+        int64 size = 1;
+    }
 }
 
+// Node is a reference to each node
 message Node {
     string id = 1;
-    NodeSpec spec = 2;
+    
+    string chain = 2;
+    Handle handle = 3;
+
+    // specification of the characteristics for the node
+    NodeSpec spec = 4;
+
+    // Handle is the state of the node
+    message Handle {
+        string handle = 1;
+    }
 }

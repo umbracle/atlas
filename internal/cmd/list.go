@@ -1,15 +1,15 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/mitchellh/cli"
-	"github.com/umbracle/atlas/internal/state"
+	"github.com/umbracle/atlas/internal/proto"
 )
 
 // ListCommand is the command to show the version of the agent
 type ListCommand struct {
-	UI cli.Ui
+	*Meta
 }
 
 // Help implements the cli.Command interface
@@ -26,17 +26,34 @@ func (c *ListCommand) Synopsis() string {
 
 // Run implements the cli.Command interface
 func (c *ListCommand) Run(args []string) int {
-
-	state, err := state.NewState("./state.db")
+	client, err := c.Conn()
 	if err != nil {
-		panic(err)
+		c.UI.Error(err.Error())
+		return 1
 	}
 
-	nodes, err := state.ListNodes()
+	resp, err := client.ListNodes(context.Background(), &proto.ListNodesRequest{})
 	if err != nil {
-		panic(err)
+		c.UI.Error(err.Error())
+		return 1
 	}
-	fmt.Println(nodes)
 
+	c.UI.Output(formatNodes(resp.Nodes))
 	return 0
+}
+
+func formatNodes(deps []*proto.Node) string {
+	if len(deps) == 0 {
+		return "No nodes found"
+	}
+
+	rows := make([]string, len(deps)+1)
+	rows[0] = "Name|Chain"
+	for i, d := range deps {
+		rows[i+1] = fmt.Sprintf("%s|%s",
+			d.Id,
+			d.Chain,
+		)
+	}
+	return formatList(rows)
 }

@@ -2,23 +2,15 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 
-	"github.com/google/uuid"
-	"github.com/mitchellh/cli"
-	"github.com/umbracle/atlas/internal/framework"
 	"github.com/umbracle/atlas/internal/proto"
-	"github.com/umbracle/atlas/internal/runtime"
-	"github.com/umbracle/atlas/internal/state"
-	"github.com/umbracle/atlas/plugins"
 )
 
 // DeployCommand is the command to show the version of the agent
 type DeployCommand struct {
-	UI cli.Ui
+	*Meta
 
 	chain  string
 	config string
@@ -27,6 +19,7 @@ type DeployCommand struct {
 // Help implements the cli.Command interface
 func (c *DeployCommand) Help() string {
 	return `Usage: ensemble version
+	
   Display the Ensemble version`
 }
 
@@ -48,65 +41,22 @@ func (c *DeployCommand) Run(args []string) int {
 		return 1
 	}
 
-	d, err := runtime.NewDocker()
+	conn, err := c.Conn()
 	if err != nil {
 		panic(err)
 	}
 
-	plugin, ok := plugins.Plugins["geth"]
-	if !ok {
-		panic("plugin not found")
-
+	req := &proto.DeployRequest{
+		Chain:  c.chain,
+		Config: c.config,
+		Plugin: "geth",
 	}
-
-	state, err := state.NewState("./state.db")
+	resp, err := conn.Deploy(context.Background(), req)
 	if err != nil {
-		panic(err)
-	}
-
-	// check if chain exists
-	existsChain := false
-	for _, chain := range plugin.Chains() {
-		if chain == c.chain {
-			existsChain = true
-		}
-	}
-	if !existsChain {
-		c.UI.Error(fmt.Sprintf("chain %s is not available", c.chain))
+		c.UI.Error(err.Error())
 		return 1
 	}
 
-	if c.config != "" {
-		configRaw, err := ioutil.ReadFile("./config.json")
-		if err != nil {
-			panic(err)
-		}
-
-		config := plugin.Config()
-		if err := json.Unmarshal(configRaw, &config); err != nil {
-			panic(err)
-		}
-	}
-
-	input := &framework.Input{
-		Chain: c.chain,
-	}
-	nodeSpec := plugin.Build(input)
-
-	id := UUID()
-	node := &proto.Node{
-		Id:   id,
-		Spec: nodeSpec,
-	}
-
-	if err := state.UpsertNode(node); err != nil {
-		panic(err)
-	}
-	d.Run(context.Background(), nodeSpec)
-
+	fmt.Println(resp.Node)
 	return 0
-}
-
-func UUID() string {
-	return uuid.New().String()
 }

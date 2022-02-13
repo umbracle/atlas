@@ -7,7 +7,8 @@ import (
 )
 
 var (
-	nodeBucket = []byte("node")
+	nodeBucket   = []byte("node")
+	volumeBucket = []byte("volume")
 )
 
 type State struct {
@@ -16,6 +17,21 @@ type State struct {
 
 func NewState(path string) (*State, error) {
 	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		return nil, err
+	}
+	err = db.Update(func(tx *bolt.Tx) error {
+		buckets := [][]byte{
+			nodeBucket,
+			volumeBucket,
+		}
+		for _, name := range buckets {
+			if _, err := tx.CreateBucketIfNotExists(name); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
