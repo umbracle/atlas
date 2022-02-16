@@ -8,19 +8,18 @@ import (
 	"github.com/google/uuid"
 	"github.com/umbracle/atlas/internal/framework"
 	"github.com/umbracle/atlas/internal/proto"
-	"github.com/umbracle/atlas/internal/runtime"
 	"github.com/umbracle/atlas/plugins"
 )
 
 func (s *Server) Deploy(ctx context.Context, req *proto.DeployRequest) (*proto.DeployResponse, error) {
-	d, err := runtime.NewDocker()
-	if err != nil {
-		return nil, err
-	}
-
+	fmt.Println("- deploy")
 	plugin, ok := plugins.Plugins[req.Plugin]
 	if !ok {
 		return nil, fmt.Errorf("plugin %s not found", req.Plugin)
+	}
+
+	if _, err := s.instanceProvider(req.ProviderId); err != nil {
+		return nil, err
 	}
 
 	// check if chain exists
@@ -46,23 +45,26 @@ func (s *Server) Deploy(ctx context.Context, req *proto.DeployRequest) (*proto.D
 	}
 	nodeSpec := plugin.Build(input)
 
+	nodeSpec.Expected = proto.NodeSpec_Running // important
 	nodeSpec.Volume = &proto.NodeSpec_Volume{
 		Size: 100,
 	}
 	node := &proto.Node{
-		Id:    UUID(),
-		Chain: req.Chain,
-		Spec:  nodeSpec,
+		Id:             UUID(),
+		Chain:          req.Chain,
+		Spec:           nodeSpec,
+		ProviderId:     req.ProviderId,
+		ProviderConfig: req.Args,
 	}
-	handle, err := d.Run(context.Background(), nodeSpec)
-	if err != nil {
-		return nil, err
-	}
-	node.Handle = handle
-
 	if err := s.state.UpsertNode(node); err != nil {
 		return nil, err
 	}
+
+	// add an evaluation to start the scheduling
+	s.evalQueue.add(&proto.Evaluation{
+		Node: node.Id,
+	})
+
 	resp := &proto.DeployResponse{
 		Node: node,
 	}
@@ -76,6 +78,30 @@ func (s *Server) ListNodes(ctx context.Context, req *proto.ListNodesRequest) (*p
 	}
 	resp := &proto.ListNodesResponse{
 		Nodes: nodes,
+	}
+	return resp, nil
+}
+
+func (s *Server) GetProviderByName(ctx context.Context, req *proto.GetProviderByNameRequest) (*proto.Provider, error) {
+	providers, err := s.state.ListProviders()
+	if err != nil {
+		return nil, err
+	}
+	for _, provider := range providers {
+		if provider.Name == req.Name {
+			return provider, nil
+		}
+	}
+	return nil, fmt.Errorf("provider by name not found")
+}
+
+func (s *Server) ListProviders(ctx context.Context, req *proto.ListProvidersRequest) (*proto.ListProvidersResponse, error) {
+	providers, err := s.state.ListProviders()
+	if err != nil {
+		return nil, err
+	}
+	resp := &proto.ListProvidersResponse{
+		Providers: providers,
 	}
 	return resp, nil
 }

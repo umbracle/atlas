@@ -21,6 +21,11 @@ func Commands() map[string]cli.CommandFactory {
 		UI: ui,
 	}
 	return map[string]cli.CommandFactory{
+		"agent": func() (cli.Command, error) {
+			return &AgentCommand{
+				UI: ui,
+			}, nil
+		},
 		"server": func() (cli.Command, error) {
 			return &ServerCommand{
 				UI: ui,
@@ -32,18 +37,33 @@ func Commands() map[string]cli.CommandFactory {
 			}, nil
 		},
 		"version": func() (cli.Command, error) {
-			return &VersionCommand{
+			return &AgentCommand{
 				UI: ui,
 			}, nil
 		},
-		"list": func() (cli.Command, error) {
-			return &ListCommand{
+		"nodes list": func() (cli.Command, error) {
+			return &NodesListCommand{
 				Meta: meta,
 			}, nil
 		},
 		"stop": func() (cli.Command, error) {
 			return &StopCommand{
 				UI: ui,
+			}, nil
+		},
+		"providers": func() (cli.Command, error) {
+			return &ProvidersCommand{
+				UI: ui,
+			}, nil
+		},
+		"providers list": func() (cli.Command, error) {
+			return &ProvidersListCommand{
+				Meta: meta,
+			}, nil
+		},
+		"providers create": func() (cli.Command, error) {
+			return &ProvidersCreateCommand{
+				Meta: meta,
 			}, nil
 		},
 	}

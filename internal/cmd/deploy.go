@@ -12,8 +12,10 @@ import (
 type DeployCommand struct {
 	*Meta
 
-	chain  string
-	config string
+	chain    string
+	config   string
+	provider string
+	args     string
 }
 
 // Help implements the cli.Command interface
@@ -35,7 +37,8 @@ func (c *DeployCommand) Run(args []string) int {
 	flags := flag.NewFlagSet("deploy", flag.PanicOnError)
 	flags.StringVar(&c.chain, "chain", "", "")
 	flags.StringVar(&c.config, "config", "", "")
-
+	flags.StringVar(&c.provider, "provider", "", "")
+	flags.StringVar(&c.args, "args", "{}", "") // these are the provider args
 	if err := flags.Parse(args); err != nil {
 		c.UI.Error(err.Error())
 		return 1
@@ -46,10 +49,17 @@ func (c *DeployCommand) Run(args []string) int {
 		panic(err)
 	}
 
+	provider, err := conn.GetProviderByName(context.Background(), &proto.GetProviderByNameRequest{Name: c.provider})
+	if err != nil {
+		panic(err)
+	}
+
 	req := &proto.DeployRequest{
-		Chain:  c.chain,
-		Config: c.config,
-		Plugin: "geth",
+		Chain:      c.chain,
+		Config:     c.config,
+		Plugin:     "geth",
+		ProviderId: provider.Id,
+		Args:       c.args,
 	}
 	resp, err := conn.Deploy(context.Background(), req)
 	if err != nil {

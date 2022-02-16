@@ -7,14 +7,34 @@ option go_package = "/internal/proto";
 service AtlasService {
     rpc Deploy(DeployRequest) returns (DeployResponse);
     rpc ListNodes(ListNodesRequest) returns (ListNodesResponse);
+
+    rpc ListProviders(ListProvidersRequest) returns (ListProvidersResponse);
+    rpc GetProviderByName(GetProviderByNameRequest) returns (Provider);
 }
 
 // ---- grpc messages ----
+
+message ListProvidersRequest {
+
+}
+
+message ListProvidersResponse {
+    repeated Provider providers = 1;
+}
+
+message GetProviderByNameRequest {
+    string name = 1;
+}
 
 message DeployRequest {
     string plugin = 1;
     string chain = 2;
     string config = 3;
+
+    // id of the provider we want to deploy on
+    string providerId = 4;
+
+    string args = 5;
 }
 
 message DeployResponse {
@@ -30,6 +50,12 @@ message ListNodesResponse {
 
 // ---- objects ----
 
+message Provider {
+    string id = 1;
+    string name = 2;
+    string provider = 3;
+}
+
 message Input {
     string datadir = 1;
 }
@@ -40,7 +66,8 @@ message NodeSpec {
     repeated string args = 2;
     Image image = 3;
     Volume volume = 4;
-
+    Expected expected = 5;
+    
     message Image {
         string image = 1;
         string ref = 2;
@@ -48,6 +75,11 @@ message NodeSpec {
 
     message Volume {
         int64 size = 1;
+    }
+
+    enum Expected {
+        Terminated = 0;
+        Running = 1;
     }
 }
 
@@ -61,8 +93,31 @@ message Node {
     // specification of the characteristics for the node
     NodeSpec spec = 4;
 
+    // status of the machine (Pending, Running, Terminate)
+    string MachineStatus = 5;
+
+    // this machine expects this status
+    string MachineExpected = 6;
+
+    // status of the node
+    string NodeStatus = 7;
+
+    string providerId = 8;
+    
+    string providerConfig = 9;
+    
     // Handle is the state of the node
     message Handle {
         string handle = 1;
+        string ip = 2;
     }
+}
+
+// An Action being executed in the node
+message Action {
+
+}
+
+message Evaluation {
+    string node = 1;
 }

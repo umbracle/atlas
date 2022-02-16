@@ -25,6 +25,184 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
+type NodeSpec_Expected int32
+
+const (
+	NodeSpec_Terminated NodeSpec_Expected = 0
+	NodeSpec_Running    NodeSpec_Expected = 1
+)
+
+// Enum value maps for NodeSpec_Expected.
+var (
+	NodeSpec_Expected_name = map[int32]string{
+		0: "Terminated",
+		1: "Running",
+	}
+	NodeSpec_Expected_value = map[string]int32{
+		"Terminated": 0,
+		"Running":    1,
+	}
+)
+
+func (x NodeSpec_Expected) Enum() *NodeSpec_Expected {
+	p := new(NodeSpec_Expected)
+	*p = x
+	return p
+}
+
+func (x NodeSpec_Expected) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (NodeSpec_Expected) Descriptor() protoreflect.EnumDescriptor {
+	return file_internal_proto_structs_proto_enumTypes[0].Descriptor()
+}
+
+func (NodeSpec_Expected) Type() protoreflect.EnumType {
+	return &file_internal_proto_structs_proto_enumTypes[0]
+}
+
+func (x NodeSpec_Expected) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use NodeSpec_Expected.Descriptor instead.
+func (NodeSpec_Expected) EnumDescriptor() ([]byte, []int) {
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{9, 0}
+}
+
+type ListProvidersRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ListProvidersRequest) Reset() {
+	*x = ListProvidersRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_proto_structs_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListProvidersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProvidersRequest) ProtoMessage() {}
+
+func (x *ListProvidersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_proto_structs_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProvidersRequest.ProtoReflect.Descriptor instead.
+func (*ListProvidersRequest) Descriptor() ([]byte, []int) {
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{0}
+}
+
+type ListProvidersResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Providers []*Provider `protobuf:"bytes,1,rep,name=providers,proto3" json:"providers,omitempty"`
+}
+
+func (x *ListProvidersResponse) Reset() {
+	*x = ListProvidersResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_proto_structs_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListProvidersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProvidersResponse) ProtoMessage() {}
+
+func (x *ListProvidersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_proto_structs_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProvidersResponse.ProtoReflect.Descriptor instead.
+func (*ListProvidersResponse) Descriptor() ([]byte, []int) {
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ListProvidersResponse) GetProviders() []*Provider {
+	if x != nil {
+		return x.Providers
+	}
+	return nil
+}
+
+type GetProviderByNameRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *GetProviderByNameRequest) Reset() {
+	*x = GetProviderByNameRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_proto_structs_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetProviderByNameRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProviderByNameRequest) ProtoMessage() {}
+
+func (x *GetProviderByNameRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_proto_structs_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProviderByNameRequest.ProtoReflect.Descriptor instead.
+func (*GetProviderByNameRequest) Descriptor() ([]byte, []int) {
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetProviderByNameRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 type DeployRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -33,12 +211,15 @@ type DeployRequest struct {
 	Plugin string `protobuf:"bytes,1,opt,name=plugin,proto3" json:"plugin,omitempty"`
 	Chain  string `protobuf:"bytes,2,opt,name=chain,proto3" json:"chain,omitempty"`
 	Config string `protobuf:"bytes,3,opt,name=config,proto3" json:"config,omitempty"`
+	// id of the provider we want to deploy on
+	ProviderId string `protobuf:"bytes,4,opt,name=providerId,proto3" json:"providerId,omitempty"`
+	Args       string `protobuf:"bytes,5,opt,name=args,proto3" json:"args,omitempty"`
 }
 
 func (x *DeployRequest) Reset() {
 	*x = DeployRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[0]
+		mi := &file_internal_proto_structs_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -51,7 +232,7 @@ func (x *DeployRequest) String() string {
 func (*DeployRequest) ProtoMessage() {}
 
 func (x *DeployRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[0]
+	mi := &file_internal_proto_structs_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -64,7 +245,7 @@ func (x *DeployRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeployRequest.ProtoReflect.Descriptor instead.
 func (*DeployRequest) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{0}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *DeployRequest) GetPlugin() string {
@@ -88,6 +269,20 @@ func (x *DeployRequest) GetConfig() string {
 	return ""
 }
 
+func (x *DeployRequest) GetProviderId() string {
+	if x != nil {
+		return x.ProviderId
+	}
+	return ""
+}
+
+func (x *DeployRequest) GetArgs() string {
+	if x != nil {
+		return x.Args
+	}
+	return ""
+}
+
 type DeployResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -99,7 +294,7 @@ type DeployResponse struct {
 func (x *DeployResponse) Reset() {
 	*x = DeployResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[1]
+		mi := &file_internal_proto_structs_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -112,7 +307,7 @@ func (x *DeployResponse) String() string {
 func (*DeployResponse) ProtoMessage() {}
 
 func (x *DeployResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[1]
+	mi := &file_internal_proto_structs_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -125,7 +320,7 @@ func (x *DeployResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeployResponse.ProtoReflect.Descriptor instead.
 func (*DeployResponse) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{1}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *DeployResponse) GetNode() *Node {
@@ -144,7 +339,7 @@ type ListNodesRequest struct {
 func (x *ListNodesRequest) Reset() {
 	*x = ListNodesRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[2]
+		mi := &file_internal_proto_structs_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -157,7 +352,7 @@ func (x *ListNodesRequest) String() string {
 func (*ListNodesRequest) ProtoMessage() {}
 
 func (x *ListNodesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[2]
+	mi := &file_internal_proto_structs_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -170,7 +365,7 @@ func (x *ListNodesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListNodesRequest.ProtoReflect.Descriptor instead.
 func (*ListNodesRequest) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{2}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{5}
 }
 
 type ListNodesResponse struct {
@@ -184,7 +379,7 @@ type ListNodesResponse struct {
 func (x *ListNodesResponse) Reset() {
 	*x = ListNodesResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[3]
+		mi := &file_internal_proto_structs_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -197,7 +392,7 @@ func (x *ListNodesResponse) String() string {
 func (*ListNodesResponse) ProtoMessage() {}
 
 func (x *ListNodesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[3]
+	mi := &file_internal_proto_structs_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -210,7 +405,7 @@ func (x *ListNodesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListNodesResponse.ProtoReflect.Descriptor instead.
 func (*ListNodesResponse) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{3}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListNodesResponse) GetNodes() []*Node {
@@ -218,6 +413,69 @@ func (x *ListNodesResponse) GetNodes() []*Node {
 		return x.Nodes
 	}
 	return nil
+}
+
+type Provider struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id       string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name     string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Provider string `protobuf:"bytes,3,opt,name=provider,proto3" json:"provider,omitempty"`
+}
+
+func (x *Provider) Reset() {
+	*x = Provider{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_proto_structs_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Provider) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Provider) ProtoMessage() {}
+
+func (x *Provider) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_proto_structs_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Provider.ProtoReflect.Descriptor instead.
+func (*Provider) Descriptor() ([]byte, []int) {
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *Provider) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Provider) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Provider) GetProvider() string {
+	if x != nil {
+		return x.Provider
+	}
+	return ""
 }
 
 type Input struct {
@@ -231,7 +489,7 @@ type Input struct {
 func (x *Input) Reset() {
 	*x = Input{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[4]
+		mi := &file_internal_proto_structs_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -244,7 +502,7 @@ func (x *Input) String() string {
 func (*Input) ProtoMessage() {}
 
 func (x *Input) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[4]
+	mi := &file_internal_proto_structs_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -257,7 +515,7 @@ func (x *Input) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Input.ProtoReflect.Descriptor instead.
 func (*Input) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{4}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Input) GetDatadir() string {
@@ -273,16 +531,17 @@ type NodeSpec struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Env    map[string]string `protobuf:"bytes,1,rep,name=env,proto3" json:"env,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Args   []string          `protobuf:"bytes,2,rep,name=args,proto3" json:"args,omitempty"`
-	Image  *NodeSpec_Image   `protobuf:"bytes,3,opt,name=image,proto3" json:"image,omitempty"`
-	Volume *NodeSpec_Volume  `protobuf:"bytes,4,opt,name=volume,proto3" json:"volume,omitempty"`
+	Env      map[string]string `protobuf:"bytes,1,rep,name=env,proto3" json:"env,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Args     []string          `protobuf:"bytes,2,rep,name=args,proto3" json:"args,omitempty"`
+	Image    *NodeSpec_Image   `protobuf:"bytes,3,opt,name=image,proto3" json:"image,omitempty"`
+	Volume   *NodeSpec_Volume  `protobuf:"bytes,4,opt,name=volume,proto3" json:"volume,omitempty"`
+	Expected NodeSpec_Expected `protobuf:"varint,5,opt,name=expected,proto3,enum=proto.NodeSpec_Expected" json:"expected,omitempty"`
 }
 
 func (x *NodeSpec) Reset() {
 	*x = NodeSpec{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[5]
+		mi := &file_internal_proto_structs_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -295,7 +554,7 @@ func (x *NodeSpec) String() string {
 func (*NodeSpec) ProtoMessage() {}
 
 func (x *NodeSpec) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[5]
+	mi := &file_internal_proto_structs_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -308,7 +567,7 @@ func (x *NodeSpec) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NodeSpec.ProtoReflect.Descriptor instead.
 func (*NodeSpec) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{5}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *NodeSpec) GetEnv() map[string]string {
@@ -339,6 +598,13 @@ func (x *NodeSpec) GetVolume() *NodeSpec_Volume {
 	return nil
 }
 
+func (x *NodeSpec) GetExpected() NodeSpec_Expected {
+	if x != nil {
+		return x.Expected
+	}
+	return NodeSpec_Terminated
+}
+
 // Node is a reference to each node
 type Node struct {
 	state         protoimpl.MessageState
@@ -350,12 +616,20 @@ type Node struct {
 	Handle *Node_Handle `protobuf:"bytes,3,opt,name=handle,proto3" json:"handle,omitempty"`
 	// specification of the characteristics for the node
 	Spec *NodeSpec `protobuf:"bytes,4,opt,name=spec,proto3" json:"spec,omitempty"`
+	// status of the machine (Pending, Running, Terminate)
+	MachineStatus string `protobuf:"bytes,5,opt,name=MachineStatus,proto3" json:"MachineStatus,omitempty"`
+	// this machine expects this status
+	MachineExpected string `protobuf:"bytes,6,opt,name=MachineExpected,proto3" json:"MachineExpected,omitempty"`
+	// status of the node
+	NodeStatus     string `protobuf:"bytes,7,opt,name=NodeStatus,proto3" json:"NodeStatus,omitempty"`
+	ProviderId     string `protobuf:"bytes,8,opt,name=providerId,proto3" json:"providerId,omitempty"`
+	ProviderConfig string `protobuf:"bytes,9,opt,name=providerConfig,proto3" json:"providerConfig,omitempty"`
 }
 
 func (x *Node) Reset() {
 	*x = Node{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[6]
+		mi := &file_internal_proto_structs_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -368,7 +642,7 @@ func (x *Node) String() string {
 func (*Node) ProtoMessage() {}
 
 func (x *Node) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[6]
+	mi := &file_internal_proto_structs_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -381,7 +655,7 @@ func (x *Node) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Node.ProtoReflect.Descriptor instead.
 func (*Node) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{6}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Node) GetId() string {
@@ -412,6 +686,127 @@ func (x *Node) GetSpec() *NodeSpec {
 	return nil
 }
 
+func (x *Node) GetMachineStatus() string {
+	if x != nil {
+		return x.MachineStatus
+	}
+	return ""
+}
+
+func (x *Node) GetMachineExpected() string {
+	if x != nil {
+		return x.MachineExpected
+	}
+	return ""
+}
+
+func (x *Node) GetNodeStatus() string {
+	if x != nil {
+		return x.NodeStatus
+	}
+	return ""
+}
+
+func (x *Node) GetProviderId() string {
+	if x != nil {
+		return x.ProviderId
+	}
+	return ""
+}
+
+func (x *Node) GetProviderConfig() string {
+	if x != nil {
+		return x.ProviderConfig
+	}
+	return ""
+}
+
+// An Action being executed in the node
+type Action struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *Action) Reset() {
+	*x = Action{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_proto_structs_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Action) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Action) ProtoMessage() {}
+
+func (x *Action) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_proto_structs_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Action.ProtoReflect.Descriptor instead.
+func (*Action) Descriptor() ([]byte, []int) {
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{11}
+}
+
+type Evaluation struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Node string `protobuf:"bytes,1,opt,name=node,proto3" json:"node,omitempty"`
+}
+
+func (x *Evaluation) Reset() {
+	*x = Evaluation{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_proto_structs_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Evaluation) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Evaluation) ProtoMessage() {}
+
+func (x *Evaluation) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_proto_structs_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Evaluation.ProtoReflect.Descriptor instead.
+func (*Evaluation) Descriptor() ([]byte, []int) {
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *Evaluation) GetNode() string {
+	if x != nil {
+		return x.Node
+	}
+	return ""
+}
+
 type NodeSpec_Image struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -424,7 +819,7 @@ type NodeSpec_Image struct {
 func (x *NodeSpec_Image) Reset() {
 	*x = NodeSpec_Image{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[8]
+		mi := &file_internal_proto_structs_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -437,7 +832,7 @@ func (x *NodeSpec_Image) String() string {
 func (*NodeSpec_Image) ProtoMessage() {}
 
 func (x *NodeSpec_Image) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[8]
+	mi := &file_internal_proto_structs_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -450,7 +845,7 @@ func (x *NodeSpec_Image) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NodeSpec_Image.ProtoReflect.Descriptor instead.
 func (*NodeSpec_Image) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{5, 1}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{9, 1}
 }
 
 func (x *NodeSpec_Image) GetImage() string {
@@ -478,7 +873,7 @@ type NodeSpec_Volume struct {
 func (x *NodeSpec_Volume) Reset() {
 	*x = NodeSpec_Volume{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[9]
+		mi := &file_internal_proto_structs_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -491,7 +886,7 @@ func (x *NodeSpec_Volume) String() string {
 func (*NodeSpec_Volume) ProtoMessage() {}
 
 func (x *NodeSpec_Volume) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[9]
+	mi := &file_internal_proto_structs_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -504,7 +899,7 @@ func (x *NodeSpec_Volume) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NodeSpec_Volume.ProtoReflect.Descriptor instead.
 func (*NodeSpec_Volume) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{5, 2}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{9, 2}
 }
 
 func (x *NodeSpec_Volume) GetSize() int64 {
@@ -521,12 +916,13 @@ type Node_Handle struct {
 	unknownFields protoimpl.UnknownFields
 
 	Handle string `protobuf:"bytes,1,opt,name=handle,proto3" json:"handle,omitempty"`
+	Ip     string `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
 }
 
 func (x *Node_Handle) Reset() {
 	*x = Node_Handle{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_proto_structs_proto_msgTypes[10]
+		mi := &file_internal_proto_structs_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -539,7 +935,7 @@ func (x *Node_Handle) String() string {
 func (*Node_Handle) ProtoMessage() {}
 
 func (x *Node_Handle) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_proto_structs_proto_msgTypes[10]
+	mi := &file_internal_proto_structs_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -552,7 +948,7 @@ func (x *Node_Handle) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Node_Handle.ProtoReflect.Descriptor instead.
 func (*Node_Handle) Descriptor() ([]byte, []int) {
-	return file_internal_proto_structs_proto_rawDescGZIP(), []int{6, 0}
+	return file_internal_proto_structs_proto_rawDescGZIP(), []int{10, 0}
 }
 
 func (x *Node_Handle) GetHandle() string {
@@ -562,67 +958,121 @@ func (x *Node_Handle) GetHandle() string {
 	return ""
 }
 
+func (x *Node_Handle) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
 var File_internal_proto_structs_proto protoreflect.FileDescriptor
 
 var file_internal_proto_structs_proto_rawDesc = []byte{
 	0x0a, 0x1c, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x2f, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x05,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x55, 0x0a, 0x0d, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x6c, 0x75, 0x67, 0x69, 0x6e,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x70, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x12, 0x14,
-	0x0a, 0x05, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x63,
-	0x68, 0x61, 0x69, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x22, 0x31, 0x0a, 0x0e,
-	0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1f,
-	0x0a, 0x04, 0x6e, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x52, 0x04, 0x6e, 0x6f, 0x64, 0x65, 0x22,
-	0x12, 0x0a, 0x10, 0x4c, 0x69, 0x73, 0x74, 0x4e, 0x6f, 0x64, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x22, 0x36, 0x0a, 0x11, 0x4c, 0x69, 0x73, 0x74, 0x4e, 0x6f, 0x64, 0x65, 0x73,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x05, 0x6e, 0x6f, 0x64, 0x65,
-	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
-	0x4e, 0x6f, 0x64, 0x65, 0x52, 0x05, 0x6e, 0x6f, 0x64, 0x65, 0x73, 0x22, 0x21, 0x0a, 0x05, 0x49,
-	0x6e, 0x70, 0x75, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x64, 0x61, 0x74, 0x61, 0x64, 0x69, 0x72, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x64, 0x61, 0x74, 0x61, 0x64, 0x69, 0x72, 0x22, 0xae,
-	0x02, 0x0a, 0x08, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x12, 0x2a, 0x0a, 0x03, 0x65,
-	0x6e, 0x76, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x2e, 0x45, 0x6e, 0x76, 0x45, 0x6e, 0x74,
-	0x72, 0x79, 0x52, 0x03, 0x65, 0x6e, 0x76, 0x12, 0x12, 0x0a, 0x04, 0x61, 0x72, 0x67, 0x73, 0x18,
-	0x02, 0x20, 0x03, 0x28, 0x09, 0x52, 0x04, 0x61, 0x72, 0x67, 0x73, 0x12, 0x2b, 0x0a, 0x05, 0x69,
-	0x6d, 0x61, 0x67, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x2e, 0x49, 0x6d, 0x61, 0x67,
-	0x65, 0x52, 0x05, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x12, 0x2e, 0x0a, 0x06, 0x76, 0x6f, 0x6c, 0x75,
-	0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x2e, 0x56, 0x6f, 0x6c, 0x75, 0x6d, 0x65,
-	0x52, 0x06, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x1a, 0x36, 0x0a, 0x08, 0x45, 0x6e, 0x76, 0x45,
-	0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
-	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01,
-	0x1a, 0x2f, 0x0a, 0x05, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x69, 0x6d, 0x61,
-	0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x12,
-	0x10, 0x0a, 0x03, 0x72, 0x65, 0x66, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x72, 0x65,
-	0x66, 0x1a, 0x1c, 0x0a, 0x06, 0x56, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x73,
-	0x69, 0x7a, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x22,
-	0x9f, 0x01, 0x0a, 0x04, 0x4e, 0x6f, 0x64, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x16, 0x0a, 0x14, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f,
+	0x76, 0x69, 0x64, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x46, 0x0a,
+	0x15, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x73, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2d, 0x0a, 0x09, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64,
+	0x65, 0x72, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2e, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x76,
+	0x69, 0x64, 0x65, 0x72, 0x73, 0x22, 0x2e, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x76,
+	0x69, 0x64, 0x65, 0x72, 0x42, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x89, 0x01, 0x0a, 0x0d, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x6c, 0x75, 0x67, 0x69,
+	0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x70, 0x6c, 0x75, 0x67, 0x69, 0x6e, 0x12,
+	0x14, 0x0a, 0x05, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x63, 0x68, 0x61, 0x69, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x1e, 0x0a,
+	0x0a, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x49, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0a, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x49, 0x64, 0x12, 0x12, 0x0a,
+	0x04, 0x61, 0x72, 0x67, 0x73, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x61, 0x72, 0x67,
+	0x73, 0x22, 0x31, 0x0a, 0x0e, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x1f, 0x0a, 0x04, 0x6e, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x0b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x52, 0x04,
+	0x6e, 0x6f, 0x64, 0x65, 0x22, 0x12, 0x0a, 0x10, 0x4c, 0x69, 0x73, 0x74, 0x4e, 0x6f, 0x64, 0x65,
+	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x36, 0x0a, 0x11, 0x4c, 0x69, 0x73, 0x74,
+	0x4e, 0x6f, 0x64, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a,
+	0x05, 0x6e, 0x6f, 0x64, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x52, 0x05, 0x6e, 0x6f, 0x64, 0x65, 0x73,
+	0x22, 0x4a, 0x0a, 0x08, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x12, 0x0e, 0x0a, 0x02,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x12, 0x1a, 0x0a, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x22, 0x21, 0x0a, 0x05,
+	0x49, 0x6e, 0x70, 0x75, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x64, 0x61, 0x74, 0x61, 0x64, 0x69, 0x72,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x64, 0x61, 0x74, 0x61, 0x64, 0x69, 0x72, 0x22,
+	0x8d, 0x03, 0x0a, 0x08, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x12, 0x2a, 0x0a, 0x03,
+	0x65, 0x6e, 0x76, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x2e, 0x45, 0x6e, 0x76, 0x45, 0x6e,
+	0x74, 0x72, 0x79, 0x52, 0x03, 0x65, 0x6e, 0x76, 0x12, 0x12, 0x0a, 0x04, 0x61, 0x72, 0x67, 0x73,
+	0x18, 0x02, 0x20, 0x03, 0x28, 0x09, 0x52, 0x04, 0x61, 0x72, 0x67, 0x73, 0x12, 0x2b, 0x0a, 0x05,
+	0x69, 0x6d, 0x61, 0x67, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x2e, 0x49, 0x6d, 0x61,
+	0x67, 0x65, 0x52, 0x05, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x12, 0x2e, 0x0a, 0x06, 0x76, 0x6f, 0x6c,
+	0x75, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x2e, 0x56, 0x6f, 0x6c, 0x75, 0x6d,
+	0x65, 0x52, 0x06, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x12, 0x34, 0x0a, 0x08, 0x65, 0x78, 0x70,
+	0x65, 0x63, 0x74, 0x65, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x18, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x2e, 0x45, 0x78, 0x70,
+	0x65, 0x63, 0x74, 0x65, 0x64, 0x52, 0x08, 0x65, 0x78, 0x70, 0x65, 0x63, 0x74, 0x65, 0x64, 0x1a,
+	0x36, 0x0a, 0x08, 0x45, 0x6e, 0x76, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b,
+	0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a,
+	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61,
+	0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x1a, 0x2f, 0x0a, 0x05, 0x49, 0x6d, 0x61, 0x67, 0x65,
+	0x12, 0x14, 0x0a, 0x05, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x72, 0x65, 0x66, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x03, 0x72, 0x65, 0x66, 0x1a, 0x1c, 0x0a, 0x06, 0x56, 0x6f, 0x6c, 0x75,
+	0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03,
+	0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x22, 0x27, 0x0a, 0x08, 0x45, 0x78, 0x70, 0x65, 0x63, 0x74,
+	0x65, 0x64, 0x12, 0x0e, 0x0a, 0x0a, 0x54, 0x65, 0x72, 0x6d, 0x69, 0x6e, 0x61, 0x74, 0x65, 0x64,
+	0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07, 0x52, 0x75, 0x6e, 0x6e, 0x69, 0x6e, 0x67, 0x10, 0x01, 0x22,
+	0xe7, 0x02, 0x0a, 0x04, 0x4e, 0x6f, 0x64, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x68, 0x61, 0x69,
 	0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x12, 0x2a,
 	0x0a, 0x06, 0x68, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x2e, 0x48, 0x61, 0x6e, 0x64,
 	0x6c, 0x65, 0x52, 0x06, 0x68, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x12, 0x23, 0x0a, 0x04, 0x73, 0x70,
 	0x65, 0x63, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x52, 0x04, 0x73, 0x70, 0x65, 0x63, 0x1a,
-	0x20, 0x0a, 0x06, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x68, 0x61, 0x6e,
-	0x64, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x68, 0x61, 0x6e, 0x64, 0x6c,
-	0x65, 0x32, 0x85, 0x01, 0x0a, 0x0c, 0x41, 0x74, 0x6c, 0x61, 0x73, 0x53, 0x65, 0x72, 0x76, 0x69,
-	0x63, 0x65, 0x12, 0x35, 0x0a, 0x06, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x12, 0x14, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x44, 0x65, 0x70, 0x6c, 0x6f,
-	0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3e, 0x0a, 0x09, 0x4c, 0x69, 0x73,
-	0x74, 0x4e, 0x6f, 0x64, 0x65, 0x73, 0x12, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x4c,
-	0x69, 0x73, 0x74, 0x4e, 0x6f, 0x64, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
-	0x18, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4e, 0x6f, 0x64, 0x65,
-	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x11, 0x5a, 0x0f, 0x2f, 0x69, 0x6e,
-	0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x2e, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x70, 0x65, 0x63, 0x52, 0x04, 0x73, 0x70, 0x65, 0x63, 0x12,
+	0x24, 0x0a, 0x0d, 0x4d, 0x61, 0x63, 0x68, 0x69, 0x6e, 0x65, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
+	0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x4d, 0x61, 0x63, 0x68, 0x69, 0x6e, 0x65, 0x53,
+	0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x28, 0x0a, 0x0f, 0x4d, 0x61, 0x63, 0x68, 0x69, 0x6e, 0x65,
+	0x45, 0x78, 0x70, 0x65, 0x63, 0x74, 0x65, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0f,
+	0x4d, 0x61, 0x63, 0x68, 0x69, 0x6e, 0x65, 0x45, 0x78, 0x70, 0x65, 0x63, 0x74, 0x65, 0x64, 0x12,
+	0x1e, 0x0a, 0x0a, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x07, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0a, 0x4e, 0x6f, 0x64, 0x65, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12,
+	0x1e, 0x0a, 0x0a, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x49, 0x64, 0x18, 0x08, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x49, 0x64, 0x12,
+	0x26, 0x0a, 0x0e, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x18, 0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65,
+	0x72, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x1a, 0x30, 0x0a, 0x06, 0x48, 0x61, 0x6e, 0x64, 0x6c,
+	0x65, 0x12, 0x16, 0x0a, 0x06, 0x68, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x68, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x22, 0x08, 0x0a, 0x06, 0x41, 0x63, 0x74,
+	0x69, 0x6f, 0x6e, 0x22, 0x20, 0x0a, 0x0a, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x04, 0x6e, 0x6f, 0x64, 0x65, 0x32, 0x98, 0x02, 0x0a, 0x0c, 0x41, 0x74, 0x6c, 0x61, 0x73, 0x53,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x35, 0x0a, 0x06, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79,
+	0x12, 0x14, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x44, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x44,
+	0x65, 0x70, 0x6c, 0x6f, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3e, 0x0a,
+	0x09, 0x4c, 0x69, 0x73, 0x74, 0x4e, 0x6f, 0x64, 0x65, 0x73, 0x12, 0x17, 0x2e, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4e, 0x6f, 0x64, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x4c, 0x69, 0x73, 0x74,
+	0x4e, 0x6f, 0x64, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4a, 0x0a,
+	0x0d, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x73, 0x12, 0x1b,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x76, 0x69,
+	0x64, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x45, 0x0a, 0x11, 0x47, 0x65, 0x74,
+	0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x42, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x1f,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64,
+	0x65, 0x72, 0x42, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x0f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72,
+	0x42, 0x11, 0x5a, 0x0f, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -637,37 +1087,51 @@ func file_internal_proto_structs_proto_rawDescGZIP() []byte {
 	return file_internal_proto_structs_proto_rawDescData
 }
 
-var file_internal_proto_structs_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_internal_proto_structs_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_internal_proto_structs_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_internal_proto_structs_proto_goTypes = []interface{}{
-	(*DeployRequest)(nil),     // 0: proto.DeployRequest
-	(*DeployResponse)(nil),    // 1: proto.DeployResponse
-	(*ListNodesRequest)(nil),  // 2: proto.ListNodesRequest
-	(*ListNodesResponse)(nil), // 3: proto.ListNodesResponse
-	(*Input)(nil),             // 4: proto.Input
-	(*NodeSpec)(nil),          // 5: proto.NodeSpec
-	(*Node)(nil),              // 6: proto.Node
-	nil,                       // 7: proto.NodeSpec.EnvEntry
-	(*NodeSpec_Image)(nil),    // 8: proto.NodeSpec.Image
-	(*NodeSpec_Volume)(nil),   // 9: proto.NodeSpec.Volume
-	(*Node_Handle)(nil),       // 10: proto.Node.Handle
+	(NodeSpec_Expected)(0),           // 0: proto.NodeSpec.Expected
+	(*ListProvidersRequest)(nil),     // 1: proto.ListProvidersRequest
+	(*ListProvidersResponse)(nil),    // 2: proto.ListProvidersResponse
+	(*GetProviderByNameRequest)(nil), // 3: proto.GetProviderByNameRequest
+	(*DeployRequest)(nil),            // 4: proto.DeployRequest
+	(*DeployResponse)(nil),           // 5: proto.DeployResponse
+	(*ListNodesRequest)(nil),         // 6: proto.ListNodesRequest
+	(*ListNodesResponse)(nil),        // 7: proto.ListNodesResponse
+	(*Provider)(nil),                 // 8: proto.Provider
+	(*Input)(nil),                    // 9: proto.Input
+	(*NodeSpec)(nil),                 // 10: proto.NodeSpec
+	(*Node)(nil),                     // 11: proto.Node
+	(*Action)(nil),                   // 12: proto.Action
+	(*Evaluation)(nil),               // 13: proto.Evaluation
+	nil,                              // 14: proto.NodeSpec.EnvEntry
+	(*NodeSpec_Image)(nil),           // 15: proto.NodeSpec.Image
+	(*NodeSpec_Volume)(nil),          // 16: proto.NodeSpec.Volume
+	(*Node_Handle)(nil),              // 17: proto.Node.Handle
 }
 var file_internal_proto_structs_proto_depIdxs = []int32{
-	6,  // 0: proto.DeployResponse.node:type_name -> proto.Node
-	6,  // 1: proto.ListNodesResponse.nodes:type_name -> proto.Node
-	7,  // 2: proto.NodeSpec.env:type_name -> proto.NodeSpec.EnvEntry
-	8,  // 3: proto.NodeSpec.image:type_name -> proto.NodeSpec.Image
-	9,  // 4: proto.NodeSpec.volume:type_name -> proto.NodeSpec.Volume
-	10, // 5: proto.Node.handle:type_name -> proto.Node.Handle
-	5,  // 6: proto.Node.spec:type_name -> proto.NodeSpec
-	0,  // 7: proto.AtlasService.Deploy:input_type -> proto.DeployRequest
-	2,  // 8: proto.AtlasService.ListNodes:input_type -> proto.ListNodesRequest
-	1,  // 9: proto.AtlasService.Deploy:output_type -> proto.DeployResponse
-	3,  // 10: proto.AtlasService.ListNodes:output_type -> proto.ListNodesResponse
-	9,  // [9:11] is the sub-list for method output_type
-	7,  // [7:9] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	8,  // 0: proto.ListProvidersResponse.providers:type_name -> proto.Provider
+	11, // 1: proto.DeployResponse.node:type_name -> proto.Node
+	11, // 2: proto.ListNodesResponse.nodes:type_name -> proto.Node
+	14, // 3: proto.NodeSpec.env:type_name -> proto.NodeSpec.EnvEntry
+	15, // 4: proto.NodeSpec.image:type_name -> proto.NodeSpec.Image
+	16, // 5: proto.NodeSpec.volume:type_name -> proto.NodeSpec.Volume
+	0,  // 6: proto.NodeSpec.expected:type_name -> proto.NodeSpec.Expected
+	17, // 7: proto.Node.handle:type_name -> proto.Node.Handle
+	10, // 8: proto.Node.spec:type_name -> proto.NodeSpec
+	4,  // 9: proto.AtlasService.Deploy:input_type -> proto.DeployRequest
+	6,  // 10: proto.AtlasService.ListNodes:input_type -> proto.ListNodesRequest
+	1,  // 11: proto.AtlasService.ListProviders:input_type -> proto.ListProvidersRequest
+	3,  // 12: proto.AtlasService.GetProviderByName:input_type -> proto.GetProviderByNameRequest
+	5,  // 13: proto.AtlasService.Deploy:output_type -> proto.DeployResponse
+	7,  // 14: proto.AtlasService.ListNodes:output_type -> proto.ListNodesResponse
+	2,  // 15: proto.AtlasService.ListProviders:output_type -> proto.ListProvidersResponse
+	8,  // 16: proto.AtlasService.GetProviderByName:output_type -> proto.Provider
+	13, // [13:17] is the sub-list for method output_type
+	9,  // [9:13] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_internal_proto_structs_proto_init() }
@@ -677,7 +1141,7 @@ func file_internal_proto_structs_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_internal_proto_structs_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeployRequest); i {
+			switch v := v.(*ListProvidersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -689,7 +1153,7 @@ func file_internal_proto_structs_proto_init() {
 			}
 		}
 		file_internal_proto_structs_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeployResponse); i {
+			switch v := v.(*ListProvidersResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -701,7 +1165,7 @@ func file_internal_proto_structs_proto_init() {
 			}
 		}
 		file_internal_proto_structs_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListNodesRequest); i {
+			switch v := v.(*GetProviderByNameRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -713,7 +1177,7 @@ func file_internal_proto_structs_proto_init() {
 			}
 		}
 		file_internal_proto_structs_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListNodesResponse); i {
+			switch v := v.(*DeployRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -725,7 +1189,7 @@ func file_internal_proto_structs_proto_init() {
 			}
 		}
 		file_internal_proto_structs_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Input); i {
+			switch v := v.(*DeployResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -737,7 +1201,7 @@ func file_internal_proto_structs_proto_init() {
 			}
 		}
 		file_internal_proto_structs_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*NodeSpec); i {
+			switch v := v.(*ListNodesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -749,7 +1213,19 @@ func file_internal_proto_structs_proto_init() {
 			}
 		}
 		file_internal_proto_structs_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Node); i {
+			switch v := v.(*ListNodesResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_proto_structs_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Provider); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -761,7 +1237,7 @@ func file_internal_proto_structs_proto_init() {
 			}
 		}
 		file_internal_proto_structs_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*NodeSpec_Image); i {
+			switch v := v.(*Input); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -773,7 +1249,7 @@ func file_internal_proto_structs_proto_init() {
 			}
 		}
 		file_internal_proto_structs_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*NodeSpec_Volume); i {
+			switch v := v.(*NodeSpec); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -785,6 +1261,66 @@ func file_internal_proto_structs_proto_init() {
 			}
 		}
 		file_internal_proto_structs_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Node); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_proto_structs_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Action); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_proto_structs_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Evaluation); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_proto_structs_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*NodeSpec_Image); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_proto_structs_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*NodeSpec_Volume); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_proto_structs_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Node_Handle); i {
 			case 0:
 				return &v.state
@@ -802,13 +1338,14 @@ func file_internal_proto_structs_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_internal_proto_structs_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   11,
+			NumEnums:      1,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_internal_proto_structs_proto_goTypes,
 		DependencyIndexes: file_internal_proto_structs_proto_depIdxs,
+		EnumInfos:         file_internal_proto_structs_proto_enumTypes,
 		MessageInfos:      file_internal_proto_structs_proto_msgTypes,
 	}.Build()
 	File_internal_proto_structs_proto = out.File

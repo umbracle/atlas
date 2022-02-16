@@ -7,25 +7,25 @@ import (
 	"github.com/umbracle/atlas/internal/proto"
 )
 
-// ListCommand is the command to show the version of the agent
-type ListCommand struct {
+// NodesListCommand is the command to show the version of the agent
+type NodesListCommand struct {
 	*Meta
 }
 
 // Help implements the cli.Command interface
-func (c *ListCommand) Help() string {
+func (c *NodesListCommand) Help() string {
 	return `Usage: ensemble version
 	
   Display the Ensemble version`
 }
 
 // Synopsis implements the cli.Command interface
-func (c *ListCommand) Synopsis() string {
+func (c *NodesListCommand) Synopsis() string {
 	return "Display the Ensemble version"
 }
 
 // Run implements the cli.Command interface
-func (c *ListCommand) Run(args []string) int {
+func (c *NodesListCommand) Run(args []string) int {
 	client, err := c.Conn()
 	if err != nil {
 		c.UI.Error(err.Error())

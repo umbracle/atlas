@@ -27,3 +27,10 @@ $ docker rm -f $(docker ps -a -q)
 // Plugin system to execute commands
     // differentiate between stopped and running commands.
     // exec in the machine?
+
+// Provision
+    // Node state => Stopped, Terminated, (Latency), Provisioning.
+
+# Development
+
+## Using ngrok

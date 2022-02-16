@@ -20,6 +20,8 @@ const _ = grpc.SupportPackageIsVersion7
 type AtlasServiceClient interface {
 	Deploy(ctx context.Context, in *DeployRequest, opts ...grpc.CallOption) (*DeployResponse, error)
 	ListNodes(ctx context.Context, in *ListNodesRequest, opts ...grpc.CallOption) (*ListNodesResponse, error)
+	ListProviders(ctx context.Context, in *ListProvidersRequest, opts ...grpc.CallOption) (*ListProvidersResponse, error)
+	GetProviderByName(ctx context.Context, in *GetProviderByNameRequest, opts ...grpc.CallOption) (*Provider, error)
 }
 
 type atlasServiceClient struct {
@@ -48,12 +50,32 @@ func (c *atlasServiceClient) ListNodes(ctx context.Context, in *ListNodesRequest
 	return out, nil
 }
 
+func (c *atlasServiceClient) ListProviders(ctx context.Context, in *ListProvidersRequest, opts ...grpc.CallOption) (*ListProvidersResponse, error) {
+	out := new(ListProvidersResponse)
+	err := c.cc.Invoke(ctx, "/proto.AtlasService/ListProviders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *atlasServiceClient) GetProviderByName(ctx context.Context, in *GetProviderByNameRequest, opts ...grpc.CallOption) (*Provider, error) {
+	out := new(Provider)
+	err := c.cc.Invoke(ctx, "/proto.AtlasService/GetProviderByName", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AtlasServiceServer is the server API for AtlasService service.
 // All implementations must embed UnimplementedAtlasServiceServer
 // for forward compatibility
 type AtlasServiceServer interface {
 	Deploy(context.Context, *DeployRequest) (*DeployResponse, error)
 	ListNodes(context.Context, *ListNodesRequest) (*ListNodesResponse, error)
+	ListProviders(context.Context, *ListProvidersRequest) (*ListProvidersResponse, error)
+	GetProviderByName(context.Context, *GetProviderByNameRequest) (*Provider, error)
 	mustEmbedUnimplementedAtlasServiceServer()
 }
 
@@ -66,6 +88,12 @@ func (UnimplementedAtlasServiceServer) Deploy(context.Context, *DeployRequest) (
 }
 func (UnimplementedAtlasServiceServer) ListNodes(context.Context, *ListNodesRequest) (*ListNodesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListNodes not implemented")
+}
+func (UnimplementedAtlasServiceServer) ListProviders(context.Context, *ListProvidersRequest) (*ListProvidersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListProviders not implemented")
+}
+func (UnimplementedAtlasServiceServer) GetProviderByName(context.Context, *GetProviderByNameRequest) (*Provider, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProviderByName not implemented")
 }
 func (UnimplementedAtlasServiceServer) mustEmbedUnimplementedAtlasServiceServer() {}
 
@@ -116,6 +144,42 @@ func _AtlasService_ListNodes_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AtlasService_ListProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AtlasServiceServer).ListProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AtlasService/ListProviders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AtlasServiceServer).ListProviders(ctx, req.(*ListProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AtlasService_GetProviderByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProviderByNameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AtlasServiceServer).GetProviderByName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AtlasService/GetProviderByName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AtlasServiceServer).GetProviderByName(ctx, req.(*GetProviderByNameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AtlasService_ServiceDesc is the grpc.ServiceDesc for AtlasService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +194,14 @@ var AtlasService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListNodes",
 			Handler:    _AtlasService_ListNodes_Handler,
+		},
+		{
+			MethodName: "ListProviders",
+			Handler:    _AtlasService_ListProviders_Handler,
+		},
+		{
+			MethodName: "GetProviderByName",
+			Handler:    _AtlasService_GetProviderByName_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

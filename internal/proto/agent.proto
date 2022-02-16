@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package proto;
+
+import "google/protobuf/empty.proto";
+import "internal/proto/structs.proto";
+
+option go_package = "/internal/proto";
+
+service AgentService {
+    rpc Do(google.protobuf.Empty) returns (google.protobuf.Empty);
+    rpc CreateService(CreateServiceRequest) returns (CreateRequestResponse);
+    rpc Stream(google.protobuf.Empty) returns (stream StreamResponse);
+}
+
+message StreamResponse {
+    oneof resp {
+        NodeStatus nodeStatus = 1;
+        Event event = 2;
+    }
+
+    message Event {
+        string message = 1;
+    }
+
+    enum NodeStatus {
+        Started = 0;
+        Failed = 1;
+    }
+}
+
+message CreateServiceRequest {
+    NodeSpec spec = 1;
+}
+
+message CreateRequestResponse {
+
+}
