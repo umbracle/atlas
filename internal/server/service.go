@@ -13,6 +13,26 @@ import (
 
 func (s *Server) Deploy(ctx context.Context, req *proto.DeployRequest) (*proto.DeployResponse, error) {
 	fmt.Println("- deploy")
+
+	if req.Id != "" {
+		// its an update
+		node, err := s.state.LoadNode(req.Id)
+		if err != nil {
+			return nil, err
+		}
+		node.ExpectedConfig = req.Args
+		if err := s.state.UpsertNode(node); err != nil {
+			return nil, err
+		}
+
+		// add an evaluation to start the scheduling
+		s.evalQueue.add(&proto.Evaluation{
+			Node: node.Id,
+		})
+
+		return &proto.DeployResponse{Node: node}, nil
+	}
+
 	plugin, ok := plugins.Plugins[req.Plugin]
 	if !ok {
 		return nil, fmt.Errorf("plugin %s not found", req.Plugin)
@@ -54,7 +74,7 @@ func (s *Server) Deploy(ctx context.Context, req *proto.DeployRequest) (*proto.D
 		Chain:          req.Chain,
 		Spec:           nodeSpec,
 		ProviderId:     req.ProviderId,
-		ProviderConfig: req.Args,
+		ExpectedConfig: req.Args,
 	}
 	if err := s.state.UpsertNode(node); err != nil {
 		return nil, err

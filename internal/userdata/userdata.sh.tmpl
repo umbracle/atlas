@@ -1,0 +1,19 @@
+#!/bin/bash
+
+yum update -y
+amazon-linux-extras install docker
+service docker start
+systemctl enable docker
+usermod -a -G docker ec2-user
+docker info
+
+# install yum
+yum install -y tmux
+
+# download atlas
+echo "atlas"
+curl -o /usr/bin/atlas {{.DownloadLink}} && chmod +x /usr/bin/atlas
+echo "atlas done"
+
+# start the agent session
+tmux new-session -d -s atlas '/usr/bin/atlas agent'

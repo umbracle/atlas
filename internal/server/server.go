@@ -91,6 +91,7 @@ func (s *Server) instanceProvider(id string) (framework.Provider, error) {
 	if !ok {
 		return nil, fmt.Errorf("provider backend '%s' not found", provider.Provider)
 	}
+	prov.Init()
 	return prov, nil
 }
 
@@ -135,11 +136,14 @@ func (s *Server) handleEval(eval *proto.Evaluation) error {
 
 	s.logger.Info("Update node", "node", eval.Node)
 
-	if err := provider.Update(context.Background(), node); err != nil {
-		return err
-	}
-	if err := s.upsertNode(node); err != nil {
-		return err
+	if node.ExpectedConfig != node.CurrentConfig {
+		// only update if we expect to have a different configuration
+		if err := provider.Update(context.Background(), node); err != nil {
+			return err
+		}
+		if err := s.upsertNode(node); err != nil {
+			return err
+		}
 	}
 
 	return nil

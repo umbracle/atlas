@@ -5,6 +5,7 @@ import (
 
 	"github.com/umbracle/atlas/internal/framework"
 	"github.com/umbracle/atlas/internal/proto"
+	"github.com/umbracle/atlas/internal/schema"
 )
 
 const (
@@ -18,6 +19,10 @@ type Geth struct {
 
 type config struct {
 	Cache int
+}
+
+func (g *Geth) Schema() *schema.Object {
+	return &schema.Object{}
 }
 
 func (g *Geth) Config() interface{} {

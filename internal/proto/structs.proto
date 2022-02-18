@@ -35,6 +35,8 @@ message DeployRequest {
     string providerId = 4;
 
     string args = 5;
+
+    string id = 6;
 }
 
 message DeployResponse {
@@ -104,8 +106,9 @@ message Node {
 
     string providerId = 8;
     
-    string providerConfig = 9;
-    
+    string expectedConfig = 9;
+    string currentConfig = 10;
+
     // Handle is the state of the node
     message Handle {
         string handle = 1;

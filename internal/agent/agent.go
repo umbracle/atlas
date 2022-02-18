@@ -79,7 +79,7 @@ func (a *Agent) setupGRPCServer(addr string) error {
 }
 
 func (a *Agent) Close() {
-
+	a.grpcServer.Stop()
 }
 
 func (a *Agent) withLoggingUnaryInterceptor() grpc.ServerOption {

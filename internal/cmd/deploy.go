@@ -16,6 +16,7 @@ type DeployCommand struct {
 	config   string
 	provider string
 	args     string
+	id       string
 }
 
 // Help implements the cli.Command interface
@@ -39,6 +40,8 @@ func (c *DeployCommand) Run(args []string) int {
 	flags.StringVar(&c.config, "config", "", "")
 	flags.StringVar(&c.provider, "provider", "", "")
 	flags.StringVar(&c.args, "args", "{}", "") // these are the provider args
+	flags.StringVar(&c.id, "id", "", "")
+
 	if err := flags.Parse(args); err != nil {
 		c.UI.Error(err.Error())
 		return 1
@@ -60,6 +63,7 @@ func (c *DeployCommand) Run(args []string) int {
 		Plugin:     "geth",
 		ProviderId: provider.Id,
 		Args:       c.args,
+		Id:         c.id,
 	}
 	resp, err := conn.Deploy(context.Background(), req)
 	if err != nil {
