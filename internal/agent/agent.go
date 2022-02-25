@@ -2,13 +2,18 @@ package agent
 
 import (
 	"context"
+	"fmt"
 	"net"
+	"os"
 	"time"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/umbracle/atlas/internal/agent/docker"
 	"github.com/umbracle/atlas/internal/proto"
 	"google.golang.org/grpc"
+
+	mountutils "k8s.io/mount-utils"
+	utilexec "k8s.io/utils/exec"
 )
 
 type Config struct {
@@ -44,6 +49,10 @@ func NewAgent(logger hclog.Logger, config *Config) (*Agent, error) {
 		return nil, err
 	}
 
+	if err := agent.handleVolume(); err != nil {
+		return nil, err
+	}
+
 	driver, err := docker.NewDocker()
 	if err != nil {
 		return nil, err
@@ -53,6 +62,38 @@ func NewAgent(logger hclog.Logger, config *Config) (*Agent, error) {
 	go agent.reconcile()
 
 	return agent, nil
+}
+
+func newSafeMounter() *mountutils.SafeFormatAndMount {
+	return &mountutils.SafeFormatAndMount{
+		Interface: mountutils.New(""),
+		Exec:      utilexec.New(),
+	}
+}
+
+func (a *Agent) handleVolume() error {
+
+	fmt.Println(os.MkdirAll("/data", 0700))
+
+	mounter := newSafeMounter()
+
+	mounts, err := mounter.List()
+	if err != nil {
+		return err
+	}
+	for _, mount := range mounts {
+		fmt.Println(mount)
+	}
+
+	resize := mountutils.NewResizeFs(utilexec.New())
+
+	// check if its needs resize
+	fmt.Println(resize.NeedResize("/dev/xvdh", "/data"))
+
+	// do the resize
+	fmt.Println(mounter.FormatAndMount("/dev/xvdh", "/data", "ext4", []string{}))
+
+	return nil
 }
 
 func (a *Agent) emitMsg(resp *proto.StreamResponse) {

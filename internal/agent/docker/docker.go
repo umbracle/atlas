@@ -55,13 +55,19 @@ func (d *Docker) PullImage(ctx context.Context, spec *proto.NodeSpec) (bool, err
 
 func (d *Docker) Run(ctx context.Context, spec *proto.NodeSpec) (string, error) {
 	// create container
-	resp, err := d.cli.ContainerCreate(ctx, &container.Config{
+	config := &container.Config{
 		Image: spec.Image.Image + ":" + spec.Image.Ref,
 		Cmd:   spec.Args,
 		Labels: map[string]string{
 			"atlas": "true",
 		},
-	}, nil, nil, nil, "")
+	}
+	hostConfig := &container.HostConfig{
+		Binds: []string{
+			"/data:/data",
+		},
+	}
+	resp, err := d.cli.ContainerCreate(ctx, config, hostConfig, nil, nil, "")
 	if err != nil {
 		return "", err
 	}

@@ -184,7 +184,11 @@ func (a *AwsProvider) Update(ctx context.Context, node *proto.Node) error {
 		return nil
 	}
 
-	userData := base64.StdEncoding.EncodeToString([]byte(userdata.GetUserData()))
+	userDataInput, err := userdata.GetUserData("https://28b7-88-9-192-173.ngrok.io/atlas")
+	if err != nil {
+		return err
+	}
+	userData := base64.StdEncoding.EncodeToString([]byte(userDataInput))
 
 	fmt.Println(userData)
 
@@ -197,7 +201,7 @@ func (a *AwsProvider) Update(ctx context.Context, node *proto.Node) error {
 			{
 				DeviceName: aws.String("/dev/sdh"),
 				Ebs: &ec2.EbsBlockDevice{
-					VolumeSize: aws.Int64(1),
+					VolumeSize: aws.Int64(100),
 				},
 			},
 		},

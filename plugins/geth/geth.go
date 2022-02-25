@@ -42,7 +42,9 @@ func (g *Geth) Build(input *framework.Input) *proto.NodeSpec {
 
 	fmt.Println(g.config)
 
-	args := []string{}
+	args := []string{
+		"--datadir", "/data",
+	}
 
 	if input.Chain == "goerli" {
 		args = append(args, "--goerli")
