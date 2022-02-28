@@ -7,25 +7,25 @@ import (
 	"github.com/umbracle/atlas/internal/proto"
 )
 
-// NodesListCommand is the command to show the version of the agent
-type NodesListCommand struct {
+// NodeListCommand is the command to show the version of the agent
+type NodeListCommand struct {
 	*Meta
 }
 
 // Help implements the cli.Command interface
-func (c *NodesListCommand) Help() string {
+func (c *NodeListCommand) Help() string {
 	return `Usage: ensemble version
 	
   Display the Ensemble version`
 }
 
 // Synopsis implements the cli.Command interface
-func (c *NodesListCommand) Synopsis() string {
+func (c *NodeListCommand) Synopsis() string {
 	return "Display the Ensemble version"
 }
 
 // Run implements the cli.Command interface
-func (c *NodesListCommand) Run(args []string) int {
+func (c *NodeListCommand) Run(args []string) int {
 	client, err := c.Conn()
 	if err != nil {
 		c.UI.Error(err.Error())
@@ -48,11 +48,12 @@ func formatNodes(deps []*proto.Node) string {
 	}
 
 	rows := make([]string, len(deps)+1)
-	rows[0] = "Name|Chain"
+	rows[0] = "Name|Chain|Running"
 	for i, d := range deps {
-		rows[i+1] = fmt.Sprintf("%s|%s",
+		rows[i+1] = fmt.Sprintf("%s|%s|%v",
 			d.Id,
 			d.Chain,
+			d.Running,
 		)
 	}
 	return formatList(rows)

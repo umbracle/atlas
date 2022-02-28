@@ -1,15 +1,19 @@
 package state
 
 import (
+	"encoding/binary"
 	"fmt"
+	"time"
 
 	"github.com/boltdb/bolt"
 	"github.com/umbracle/atlas/internal/proto"
 	gproto "google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var (
 	nodeBucket      = []byte("node")
+	eventsBucket    = []byte("events")
 	volumeBucket    = []byte("volume")
 	providersBucket = []byte("providers")
 )
@@ -47,6 +51,81 @@ func NewState(path string) (*State, error) {
 
 func (s *State) Close() error {
 	return s.db.Close()
+}
+
+func (s *State) AddNodeEvent(nodeID string, msg string) error {
+	tx, err := s.db.Begin(true)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	bkt, err := tx.CreateBucketIfNotExists(eventsBucket)
+	if err != nil {
+		return err
+	}
+	nodeBkt, err := bkt.CreateBucketIfNotExists([]byte(nodeID))
+	if err != nil {
+		return err
+	}
+
+	id, _ := nodeBkt.NextSequence()
+
+	event := &proto.NodeEvent{
+		Message:   msg,
+		Timestamp: timestamppb.New(time.Now()),
+	}
+	raw, err := gproto.Marshal(event)
+	if err != nil {
+		return err
+	}
+	if err := nodeBkt.Put(itob(int(id)), raw); err != nil {
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *State) GetNodeEvents(nodeID string) ([]*proto.NodeEvent, error) {
+	tx, err := s.db.Begin(false)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	bkt := tx.Bucket(eventsBucket)
+	if bkt == nil {
+		return []*proto.NodeEvent{}, nil
+	}
+	nodeBkt := bkt.Bucket([]byte(nodeID))
+	if nodeBkt == nil {
+		return []*proto.NodeEvent{}, nil
+	}
+
+	events := []*proto.NodeEvent{}
+	err = nodeBkt.ForEach(func(k, v []byte) error {
+		event := proto.NodeEvent{}
+		if err := gproto.Unmarshal(v, &event); err != nil {
+			return err
+		}
+		events = append(events, &event)
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return events, nil
+}
+
+// itob returns an 8-byte big endian representation of v.
+func itob(v int) []byte {
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, uint64(v))
+	return b
 }
 
 func (s *State) UpsertNode(node *proto.Node) error {

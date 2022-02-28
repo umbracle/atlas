@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AtlasServiceClient interface {
 	Deploy(ctx context.Context, in *DeployRequest, opts ...grpc.CallOption) (*DeployResponse, error)
 	ListNodes(ctx context.Context, in *ListNodesRequest, opts ...grpc.CallOption) (*ListNodesResponse, error)
+	NodeStatus(ctx context.Context, in *NodeStatusRequest, opts ...grpc.CallOption) (*NodeStatusResponse, error)
 	ListProviders(ctx context.Context, in *ListProvidersRequest, opts ...grpc.CallOption) (*ListProvidersResponse, error)
 	GetProviderByName(ctx context.Context, in *GetProviderByNameRequest, opts ...grpc.CallOption) (*Provider, error)
 }
@@ -50,6 +51,15 @@ func (c *atlasServiceClient) ListNodes(ctx context.Context, in *ListNodesRequest
 	return out, nil
 }
 
+func (c *atlasServiceClient) NodeStatus(ctx context.Context, in *NodeStatusRequest, opts ...grpc.CallOption) (*NodeStatusResponse, error) {
+	out := new(NodeStatusResponse)
+	err := c.cc.Invoke(ctx, "/proto.AtlasService/NodeStatus", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *atlasServiceClient) ListProviders(ctx context.Context, in *ListProvidersRequest, opts ...grpc.CallOption) (*ListProvidersResponse, error) {
 	out := new(ListProvidersResponse)
 	err := c.cc.Invoke(ctx, "/proto.AtlasService/ListProviders", in, out, opts...)
@@ -74,6 +84,7 @@ func (c *atlasServiceClient) GetProviderByName(ctx context.Context, in *GetProvi
 type AtlasServiceServer interface {
 	Deploy(context.Context, *DeployRequest) (*DeployResponse, error)
 	ListNodes(context.Context, *ListNodesRequest) (*ListNodesResponse, error)
+	NodeStatus(context.Context, *NodeStatusRequest) (*NodeStatusResponse, error)
 	ListProviders(context.Context, *ListProvidersRequest) (*ListProvidersResponse, error)
 	GetProviderByName(context.Context, *GetProviderByNameRequest) (*Provider, error)
 	mustEmbedUnimplementedAtlasServiceServer()
@@ -88,6 +99,9 @@ func (UnimplementedAtlasServiceServer) Deploy(context.Context, *DeployRequest) (
 }
 func (UnimplementedAtlasServiceServer) ListNodes(context.Context, *ListNodesRequest) (*ListNodesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListNodes not implemented")
+}
+func (UnimplementedAtlasServiceServer) NodeStatus(context.Context, *NodeStatusRequest) (*NodeStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NodeStatus not implemented")
 }
 func (UnimplementedAtlasServiceServer) ListProviders(context.Context, *ListProvidersRequest) (*ListProvidersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListProviders not implemented")
@@ -144,6 +158,24 @@ func _AtlasService_ListNodes_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AtlasService_NodeStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NodeStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AtlasServiceServer).NodeStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AtlasService/NodeStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AtlasServiceServer).NodeStatus(ctx, req.(*NodeStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AtlasService_ListProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListProvidersRequest)
 	if err := dec(in); err != nil {
@@ -194,6 +226,10 @@ var AtlasService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListNodes",
 			Handler:    _AtlasService_ListNodes_Handler,
+		},
+		{
+			MethodName: "NodeStatus",
+			Handler:    _AtlasService_NodeStatus_Handler,
 		},
 		{
 			MethodName: "ListProviders",

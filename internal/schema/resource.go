@@ -10,10 +10,30 @@ import (
 )
 
 type Resource struct {
+	sch *Object
+	old cty.Value
 	val cty.Value
 }
 
-func (r *Resource) getValue(s string) (cty.Value, bool) {
+func NewResource(sch *Object, old, cur map[string]interface{}) (*Resource, error) {
+	oldVal, err := sch.DecodeValue(old)
+	if err != nil {
+		return nil, err
+	}
+	curVal, err := sch.DecodeValue(cur)
+	if err != nil {
+		return nil, err
+	}
+
+	resource := &Resource{
+		sch: sch,
+		old: oldVal,
+		val: curVal,
+	}
+	return resource, nil
+}
+
+func (r *Resource) getValue(refVal cty.Value, s string) (cty.Value, bool) {
 	parts := strings.Split(s, ".")
 
 	path := cty.Path{}
@@ -26,11 +46,21 @@ func (r *Resource) getValue(s string) (cty.Value, bool) {
 		}
 	}
 
-	val, err := path.Apply(r.val)
+	val, err := path.Apply(refVal)
 	if err != nil {
 		return cty.NilVal, false
 	}
 	return val, true
+}
+
+func (r *Resource) HasChanged(s string) bool {
+	val0, ok0 := r.getValue(r.val, s)
+	val1, ok1 := r.getValue(r.old, s)
+
+	if ok0 != ok1 {
+		return true
+	}
+	return !val0.RawEquals(val1)
 }
 
 func (r *Resource) Get(s string) string {
@@ -39,7 +69,7 @@ func (r *Resource) Get(s string) string {
 }
 
 func (r *Resource) GetOk(s string) (string, bool) {
-	val, ok := r.getValue(s)
+	val, ok := r.getValue(r.val, s)
 	if !ok {
 		return "", false
 	}

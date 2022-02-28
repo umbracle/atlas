@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/signal"
@@ -15,6 +16,8 @@ import (
 // ServerCommand is the command to show the version of the agent
 type ServerCommand struct {
 	UI cli.Ui
+
+	logLevel string
 }
 
 // Help implements the cli.Command interface
@@ -31,10 +34,17 @@ func (c *ServerCommand) Synopsis() string {
 
 // Run implements the cli.Command interface
 func (c *ServerCommand) Run(args []string) int {
+	flags := flag.NewFlagSet("server", flag.ContinueOnError)
+	flags.StringVar(&c.logLevel, "log-level", "info", "")
+
+	if err := flags.Parse(args); err != nil {
+		c.UI.Error(err.Error())
+		return 1
+	}
 
 	logger := hclog.New(&hclog.LoggerOptions{
-		Name:  "ensemble",
-		Level: hclog.LevelFromString("info"),
+		Name:  "atlas",
+		Level: hclog.LevelFromString(c.logLevel),
 	})
 
 	srv, err := server.NewServer(logger)

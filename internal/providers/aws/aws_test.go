@@ -14,12 +14,16 @@ func TestAws(t *testing.T) {
 
 	// Create the node
 	node := &proto.Node{
-		Id:             "a",
-		ExpectedConfig: `{"type": "t2.small"}`,
+		Id: "a",
 	}
-	assert.NoError(t, a.Update(context.Background(), node))
+	config0 := &config{
+		Type: "t2.small",
+	}
+	assert.NoError(t, a.Update(context.Background(), nil, config0, node))
 
 	// Update the node
-	node.ExpectedConfig = `{"type": "t2.medium"}`
-	assert.NoError(t, a.Update(context.Background(), node))
+	config1 := &config{
+		Type: "t2.medium",
+	}
+	assert.NoError(t, a.Update(context.Background(), config0, config1, node))
 }

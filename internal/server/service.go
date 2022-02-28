@@ -129,3 +129,20 @@ func (s *Server) ListProviders(ctx context.Context, req *proto.ListProvidersRequ
 func UUID() string {
 	return uuid.New().String()
 }
+
+func (s *Server) NodeStatus(ctx context.Context, req *proto.NodeStatusRequest) (*proto.NodeStatusResponse, error) {
+	node, err := s.state.LoadNode(req.Id)
+	if err != nil {
+		return nil, err
+	}
+	events, err := s.state.GetNodeEvents(req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &proto.NodeStatusResponse{
+		Node:   node,
+		Events: events,
+	}
+	return resp, nil
+}

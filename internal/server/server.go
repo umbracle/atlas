@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net"
 	"time"
@@ -32,11 +33,11 @@ func NewServer(logger hclog.Logger) (*Server, error) {
 		return nil, err
 	}
 	s := &Server{
-		logger:       logger,
-		state:        state,
-		evalQueue:    newEvalQueue(),
-		nodesWatcher: newNodesWatcher(logger),
+		logger:    logger,
+		state:     state,
+		evalQueue: newEvalQueue(),
 	}
+	s.nodesWatcher = newNodesWatcher(s, logger)
 
 	s.grpcServer = grpc.NewServer(s.withLoggingUnaryInterceptor())
 	proto.RegisterAtlasServiceServer(s.grpcServer, s)
@@ -137,10 +138,43 @@ func (s *Server) handleEval(eval *proto.Evaluation) error {
 	s.logger.Info("Update node", "node", eval.Node)
 
 	if node.ExpectedConfig != node.CurrentConfig {
+
+		/*
+			// we have to remove first the node, is the state running?
+			if node.Spec.Expected == proto.NodeSpec_Running {
+				// ok, first change it and wait for it
+				node.Spec.Expected = proto.NodeSpec_Terminated
+				node.NodeStatus = proto.Node_Provision
+
+				return s.upsertNode(node)
+			} else {
+				// ok, it is shuttign down, wait for it
+				if node.NodeStatus == proto.Node_Provision {
+					return nil
+				}
+			}
+		*/
+
+		var old, new interface{}
+
+		if node.ExpectedConfig != "" {
+			new = provider.Config()
+			if err := json.Unmarshal([]byte(node.ExpectedConfig), &new); err != nil {
+				return err
+			}
+		}
+		if node.CurrentConfig != "" {
+			old = provider.Config()
+			if err := json.Unmarshal([]byte(node.CurrentConfig), &old); err != nil {
+				return err
+			}
+		}
+
 		// only update if we expect to have a different configuration
-		if err := provider.Update(context.Background(), node); err != nil {
+		if err := provider.Update(context.Background(), old, new, node); err != nil {
 			return err
 		}
+		node.CurrentConfig = node.ExpectedConfig
 		if err := s.upsertNode(node); err != nil {
 			return err
 		}

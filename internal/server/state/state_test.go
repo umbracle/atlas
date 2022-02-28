@@ -46,3 +46,17 @@ func TestState_Provider(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, providers[0].Id, "a")
 }
+
+func TestState_GetEvents(t *testing.T) {
+	state, closeFn := testState(t)
+	defer closeFn()
+
+	assert.NoError(t, state.AddNodeEvent("1", "hello1"))
+	assert.NoError(t, state.AddNodeEvent("1", "hello2"))
+
+	events, err := state.GetNodeEvents("1")
+	assert.NoError(t, err)
+
+	assert.Equal(t, events[0].Message, "hello1")
+	assert.Equal(t, events[1].Message, "hello2")
+}

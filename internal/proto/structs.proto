@@ -4,15 +4,34 @@ package proto;
 
 option go_package = "/internal/proto";
 
+import "google/protobuf/timestamp.proto";
+
 service AtlasService {
     rpc Deploy(DeployRequest) returns (DeployResponse);
     rpc ListNodes(ListNodesRequest) returns (ListNodesResponse);
+    rpc NodeStatus(NodeStatusRequest) returns (NodeStatusResponse);
 
     rpc ListProviders(ListProvidersRequest) returns (ListProvidersResponse);
     rpc GetProviderByName(GetProviderByNameRequest) returns (Provider);
 }
 
 // ---- grpc messages ----
+
+message NodeStatusRequest {
+    string id = 1;
+}
+
+message NodeStatusResponse {
+    Node node = 1;
+    repeated NodeEvent events = 2;
+}
+
+message NodeEvent {
+    string message = 1;
+    string subsystem = 2;
+    map<string, string> details = 3;
+    google.protobuf.Timestamp timestamp = 4;
+}
 
 message ListProvidersRequest {
 
@@ -95,14 +114,9 @@ message Node {
     // specification of the characteristics for the node
     NodeSpec spec = 4;
 
-    // status of the machine (Pending, Running, Terminate)
-    string MachineStatus = 5;
-
-    // this machine expects this status
-    string MachineExpected = 6;
-
-    // status of the node
-    string NodeStatus = 7;
+    // NodeStatus is the status of the provisioning of the node. It can be in either
+    // of two states: provision or done.
+    NodeStatus nodeStatus = 5;
 
     string providerId = 8;
     
@@ -113,6 +127,14 @@ message Node {
     message Handle {
         string handle = 1;
         string ip = 2;
+    }
+
+    // signals whether the node is Good or not
+    bool running = 11;
+
+    enum NodeStatus {
+        Provision = 0;
+        Done = 1;
     }
 }
 

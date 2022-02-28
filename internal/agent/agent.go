@@ -141,6 +141,8 @@ WAIT:
 	newSpec := <-a.specUpdate
 	a.logger.Info("new spec update", "spec", newSpec)
 
+	atLeastOnce := false
+
 	// start to reconcile
 	for {
 		containers, err := a.driver.ListContainers()
@@ -159,12 +161,19 @@ WAIT:
 
 		plan := r.reconcile()
 		if plan.empty() {
+			if atLeastOnce {
+				a.emitNodeStatus(proto.StreamResponse_Done)
+			}
+
 			// wait for the next update
 			goto WAIT
 		}
 
+		atLeastOnce = true
+
 		// apply updates
 		if plan.stop != nil {
+			a.emitRawMsg("Stopping container")
 			if err := a.driver.StopID(*plan.stop); err != nil {
 				a.emitRawMsg("failed to stop container: " + err.Error())
 				a.logger.Error("failed to stop container: %v", err)
@@ -186,7 +195,7 @@ WAIT:
 					a.emitRawMsg("failed to start container: " + err.Error())
 					a.logger.Error(err.Error())
 				} else {
-					a.emitNodeStatus(proto.StreamResponse_Started)
+					a.emitRawMsg("start container")
 				}
 			}
 		}

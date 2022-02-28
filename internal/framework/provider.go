@@ -9,7 +9,10 @@ import (
 
 type Provider interface {
 	Init()
-	Config() (interface{}, error)
-	Update(ctx context.Context, node *proto.Node) error
+	Config() interface{}
+	Update(ctx context.Context, old, new interface{}, node *proto.Node) error
 	Schema() *schema.Object
+}
+
+type Framework struct {
 }

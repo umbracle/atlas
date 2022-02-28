@@ -4,8 +4,10 @@ import (
 	"os"
 
 	"github.com/mitchellh/cli"
+	"github.com/mitchellh/colorstring"
 	"github.com/ryanuber/columnize"
 	"github.com/umbracle/atlas/internal/proto"
+	"golang.org/x/crypto/ssh/terminal"
 	"google.golang.org/grpc"
 )
 
@@ -41,8 +43,13 @@ func Commands() map[string]cli.CommandFactory {
 				UI: ui,
 			}, nil
 		},
-		"nodes list": func() (cli.Command, error) {
-			return &NodesListCommand{
+		"node list": func() (cli.Command, error) {
+			return &NodeListCommand{
+				Meta: meta,
+			}, nil
+		},
+		"node status": func() (cli.Command, error) {
+			return &NodeStatusCommand{
 				Meta: meta,
 			}, nil
 		},
@@ -92,4 +99,12 @@ func (m *Meta) Conn() (proto.AtlasServiceClient, error) {
 		return nil, err
 	}
 	return proto.NewAtlasServiceClient(conn), nil
+}
+
+func (m *Meta) Colorize() *colorstring.Colorize {
+	return &colorstring.Colorize{
+		Colors:  colorstring.DefaultColors,
+		Disable: !terminal.IsTerminal(int(os.Stdout.Fd())),
+		Reset:   true,
+	}
 }

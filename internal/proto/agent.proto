@@ -24,8 +24,9 @@ message StreamResponse {
     }
 
     enum NodeStatus {
-        Started = 0;
+        Unknown = 0;
         Failed = 1;
+        Done = 2;
     }
 }
 

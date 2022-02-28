@@ -9,12 +9,15 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/umbracle/atlas/internal/framework"
 	"github.com/umbracle/atlas/internal/proto"
 	"github.com/umbracle/atlas/internal/schema"
 	"github.com/umbracle/atlas/internal/userdata"
 
 	"fmt"
 )
+
+var _ framework.Provider = &AwsProvider{}
 
 type config struct {
 	Type string `json:"type"`
@@ -34,15 +37,16 @@ func (a *AwsProvider) Init() {
 	a.conn = ec2.New(sess)
 }
 
-func (a *AwsProvider) Config() (interface{}, error) {
-	panic("X")
+func (a *AwsProvider) Config() interface{} {
+	return &config{}
 }
 
 func (a *AwsProvider) Schema() *schema.Object {
 	return &schema.Object{
 		Fields: map[string]*schema.Field{
 			"instance_type": {
-				Type: &schema.String,
+				Type:    &schema.String,
+				Default: "t2.small",
 			},
 		},
 	}
@@ -99,97 +103,99 @@ func (a *AwsProvider) waitForState(ctx context.Context, id string, expectedState
 	}
 }
 
-func (a *AwsProvider) Update(ctx context.Context, node *proto.Node) error {
+func (a *AwsProvider) Update(ctx context.Context, old, new interface{}, node *proto.Node) error {
 	if node.Id == "" {
 		return fmt.Errorf("id not set")
 	}
-	if node.ExpectedConfig == "" {
-		node.ExpectedConfig = "{}"
-	}
 
-	var config *config
-	if err := json.Unmarshal([]byte(node.ExpectedConfig), &config); err != nil {
-		return err
-	}
-	if config.Type == "" {
-		config.Type = "t2.medium"
-	}
+	var instance *ec2.Instance
 
-	fmt.Println("-- dd")
-	fmt.Println(node.ExpectedConfig)
-	fmt.Println(node.CurrentConfig)
-
-	if node.Handle != nil {
-
-		// do only stuff if config is different
-		if node.ExpectedConfig == node.CurrentConfig {
-			panic("this should not happen, we always call this if we have somethign to update")
+	if old == nil {
+		// create the instance
+		res, err := a.createInstance(ctx, new.(*config))
+		if err != nil {
+			return err
 		}
-
+		instance = res
+	} else {
 		var handleInput handle
 		if err := json.Unmarshal([]byte(node.Handle.Handle), &handleInput); err != nil {
 			return err
 		}
 
-		_, err := a.conn.StopInstances(&ec2.StopInstancesInput{
-			InstanceIds: []*string{aws.String(handleInput.InstanceID)},
-		})
+		// update
+		res, err := a.updateInstance(ctx, handleInput.InstanceID, old.(*config), new.(*config))
 		if err != nil {
 			return err
 		}
-
-		// wait for the instance to stop
-		if _, err := a.waitForState(ctx, handleInput.InstanceID, ec2.InstanceStateNameStopped); err != nil {
-			return err
-		}
-
-		// start again
-		modifyInput := &ec2.ModifyInstanceAttributeInput{
-			InstanceId: aws.String(handleInput.InstanceID),
-			InstanceType: &ec2.AttributeValue{
-				Value: aws.String(config.Type),
-			},
-		}
-		if _, err := a.conn.ModifyInstanceAttribute(modifyInput); err != nil {
-			return err
-		}
-
-		// start it again
-		input := &ec2.StartInstancesInput{
-			InstanceIds: []*string{aws.String(handleInput.InstanceID)},
-		}
-		if _, err := a.conn.StartInstances(input); err != nil {
-			return err
-		}
-
-		// wait for it to be running and update handle
-		instance, err := a.waitForState(ctx, handleInput.InstanceID, ec2.InstanceStateNameRunning)
-		if err != nil {
-			return err
-		}
-
-		awsHandle := &handle{
-			InstanceID: *instance.InstanceId,
-		}
-		handleRaw, err := json.Marshal(awsHandle)
-		if err != nil {
-			return err
-		}
-
-		node.Handle = &proto.Node_Handle{
-			Handle: string(handleRaw),
-			Ip:     *instance.PublicIpAddress,
-		}
-		node.CurrentConfig = node.ExpectedConfig
-		return nil
+		instance = res
 	}
 
-	userDataInput, err := userdata.GetUserData("https://28b7-88-9-192-173.ngrok.io/atlas")
+	awsHandle := &handle{
+		InstanceID: *instance.InstanceId,
+	}
+	handleRaw, err := json.Marshal(awsHandle)
 	if err != nil {
 		return err
 	}
+
+	node.Handle = &proto.Node_Handle{
+		Handle: string(handleRaw),
+		Ip:     *instance.PublicIpAddress,
+	}
+	return nil
+}
+
+func (a *AwsProvider) updateInstance(ctx context.Context, instanceID string, old, new *config) (*ec2.Instance, error) {
+	_, err := a.conn.StopInstances(&ec2.StopInstancesInput{
+		InstanceIds: []*string{aws.String(instanceID)},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// wait for the instance to stop
+	if _, err := a.waitForState(ctx, instanceID, ec2.InstanceStateNameStopped); err != nil {
+		return nil, err
+	}
+
+	// start again
+	modifyInput := &ec2.ModifyInstanceAttributeInput{
+		InstanceId: aws.String(instanceID),
+		InstanceType: &ec2.AttributeValue{
+			Value: aws.String(new.Type),
+		},
+	}
+	if _, err := a.conn.ModifyInstanceAttribute(modifyInput); err != nil {
+		return nil, err
+	}
+
+	// start it again
+	input := &ec2.StartInstancesInput{
+		InstanceIds: []*string{aws.String(instanceID)},
+	}
+	if _, err := a.conn.StartInstances(input); err != nil {
+		return nil, err
+	}
+
+	// wait for it to be running and update handle
+	instance, err := a.waitForState(ctx, instanceID, ec2.InstanceStateNameRunning)
+	if err != nil {
+		return nil, err
+	}
+	return instance, nil
+}
+
+func (a *AwsProvider) createInstance(ctx context.Context, config *config) (*ec2.Instance, error) {
+	userDataInput, err := userdata.GetUserData("https://7693-88-9-192-173.ngrok.io/atlas")
+	if err != nil {
+		return nil, err
+	}
 	userData := base64.StdEncoding.EncodeToString([]byte(userDataInput))
 
+	if config.Type == "" {
+		config.Type = "t2.small"
+	}
 	fmt.Println(userData)
 
 	instanceInput := &ec2.RunInstancesInput{
@@ -221,31 +227,15 @@ func (a *AwsProvider) Update(ctx context.Context, node *proto.Node) error {
 	}
 	runResult, err := a.conn.RunInstances(instanceInput)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	instanceId := *runResult.Instances[0].InstanceId
 	instance, err := a.waitForState(ctx, instanceId, ec2.InstanceStateNameRunning)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
-	awsHandle := &handle{
-		InstanceID: *instance.InstanceId,
-	}
-	handleRaw, err := json.Marshal(awsHandle)
-	if err != nil {
-		return err
-	}
-
-	handle := &proto.Node_Handle{
-		Handle: string(handleRaw),
-		Ip:     *instance.PublicIpAddress,
-	}
-
-	node.Handle = handle
-	node.CurrentConfig = node.ExpectedConfig
-	return nil
+	return instance, nil
 }
 
 type handle struct {

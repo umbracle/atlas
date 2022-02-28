@@ -29,6 +29,7 @@ type Field struct {
 	Type        Type
 	Description string
 	Required    bool
+	Default     interface{}
 }
 
 type Array struct {

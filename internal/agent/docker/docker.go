@@ -123,7 +123,3 @@ func (d *Docker) ListContainers() ([]*RunningContainer, error) {
 func (d *Docker) StopID(id string) error {
 	return d.cli.ContainerRemove(context.Background(), id, types.ContainerRemoveOptions{Force: true})
 }
-
-func (d *Docker) Stop(spec *proto.Node_Handle) error {
-	return d.cli.ContainerStop(context.Background(), spec.Handle, nil)
-}

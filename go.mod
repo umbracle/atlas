@@ -10,13 +10,16 @@ require (
 	github.com/google/uuid v1.2.0
 	github.com/hashicorp/go-hclog v1.1.0
 	github.com/mitchellh/cli v1.1.2
+	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/stretchr/testify v1.7.0
 	github.com/zclconf/go-cty v1.10.0
+	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
 	google.golang.org/grpc v1.44.0
 	google.golang.org/protobuf v1.27.1
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/mount-utils v0.23.4
+	k8s.io/utils v0.0.0-20211116205334-6203023598ed
 )
 
 require (
@@ -54,14 +57,13 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/posener/complete v1.1.1 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
-	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
 	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22 // indirect
+	golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1 // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
 	google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	gotest.tools/v3 v3.1.0 // indirect
 	k8s.io/klog/v2 v2.30.0 // indirect
-	k8s.io/utils v0.0.0-20211116205334-6203023598ed // indirect
 )
